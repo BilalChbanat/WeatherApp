@@ -32,9 +32,9 @@ body::-webkit-scrollbar-thumb {
 main {
     margin-left: 5rem;
     padding: 1rem;
-    /* display: flex;
+    display: flex;
     justify-content: center;
-    align-items: center; */
+    align-items: center;
     height: 100vh;
     margin: 0;
     padding-left: 5rem;
@@ -46,7 +46,7 @@ main {
     background: #bebdbdd0;
     color: white;
     padding: 2em;
-    /* border-radius: 30px; */
+    border-radius: 30px;
     width: 100%;
     max-width: 420px;
     margin: 1em;
@@ -57,6 +57,35 @@ main {
     align-items: center;
     justify-content: center;
 }
+
+#suggestions ul {
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    background-color: #ffffff;
+    width: calc(100% - 100px);
+    margin-top: 0;
+}
+
+#suggestions ul li {
+    padding: 10px 15px;
+    border-bottom: 1px solid #f1f1f1;
+    cursor: pointer;
+    color: #000000;
+    text-transform: capitalize;
+    list-style: none;
+}
+
+#suggestions ul li:hover {
+    background-color: #f1f1f1;
+}
+
+#suggestions ul li.active {
+    background-color: #f1f1f1;
+}
+
 
 .search-button {
     margin: 0.5em;
@@ -101,19 +130,21 @@ h1.temp {
     align-items: center;
 }
 
-#suggestions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 1;
-    background-color: #fff;
-    border: 1px solid #ccc;
-}
+/* #ul-s li {
+    border: none;
+    outline: none;
+    padding: 0.5em 1em;
+    border-radius: 24px;
+    background-color: #afafaf2b;
+    color: white;
+    font-size: 120%;
+    width: calc(100% - 100px);
+} */
+
 
 .navbar {
     position: fixed;
-    background-color: var(--bg-primary);
+    background-color: #ebebeb;
     transition: width 600ms ease;
 }
 
@@ -125,6 +156,7 @@ h1.temp {
     flex-direction: column;
     align-items: center;
     height: 100%;
+
     justify-content: space-between;
 }
 
@@ -167,11 +199,7 @@ h1.temp {
 }
 
 .logo {
-    font-weight: bold;
-    text-transform: uppercase;
-    text-align: center;
-    color: var(--text-secondary);
-    background: var(--bg-primary);
+    background-color: #ebebeb;
     font-size: 1.5rem;
     width: 100%;
 }
@@ -187,6 +215,10 @@ h1.temp {
 
 #icons {
     width: 50px;
+}
+
+#ul-s {
+    color: #000000;
 }
 
 

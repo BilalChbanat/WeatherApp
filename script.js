@@ -24,6 +24,7 @@ let weather = {
     searchFunction: function () {
         this.fetchWeather(document.querySelector(".search-bar").value);
     }
+
 };
 
 document.querySelector(".search-button").addEventListener("click", function () {
@@ -157,3 +158,33 @@ function removeSuggestions() {
     if (x) x.parentNode.removeChild(x);
 }
 
+search.addEventListener("keydown", function (e) {
+    var x = document.getElementById("suggestionsList");
+    if (x) x = x.getElementsByTagName("li");
+    if (e.keyCode == 40) {
+        currentFocus++;
+        addActive(x);
+    } else if (e.keyCode == 38) {
+        currentFocus--;
+        addActive(x);
+    }
+    if (e.keyCode == 13) {
+        e.preventDefault();
+        if (currentFocus > -1) {
+            if (x) x[currentFocus].click();
+        }
+    }
+});
+function addActive(x) {
+    if (!x) return false;
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = x.length - 1;
+    x[currentFocus].classList.add("active");
+}
+function removeActive(x) {
+
+    for (var i = 0; i < x.length; i++) {
+        x[i].classList.remove("active");
+    }
+}

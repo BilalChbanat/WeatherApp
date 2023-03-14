@@ -72,61 +72,77 @@ document.querySelector(".search-bar").addEventListener("keyup", function (event)
 })
 
 
-
 const search = document.querySelector("#city-input");
 
 
 
 var currentFocus;
 
-// search.addEventListener("input", function (e, city) {
-//     removeSuggestions();
-//     var a, b, i, z, val = this.value;
-//     if (!val) {
-//         return false;
-//     }
-//     currentFocus = -1;
-//     a = document.createElement("ul");
-//     a.setAttribute("id", "suggestionsList");
-//     z = document.querySelector("#suggestions")
-//     z.appendChild(a)
-//     this.parentNode.appendChild(a);
-//     const apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + $city + "&units=metric&appid=" + apiKey;
-//     fetch(apiUrl + val)
-//         .then(response => response.json())
-//         .then(data => {
-//             data.forEach(city => {
-//                 b = document.createElement("li");
-//                 b.innerHTML =
-//                     "<strong>" + city.name.substr(0, val.length) + "</strong>";
-//                 b.innerHTML += city.name.substr(val.length);
-//                 b.innerHTML += "<input type='hidden' value='" + city.name + "'>";
-//                 b.addEventListener("click", function (e) {
-//                     search.value = this.getElementsByTagName("input")[0].value;
-//                     removeSuggestions();
-//                 });
+async function handleCityInput() {
+    const cityName = cityInput.value.trim();
+    suggestionList.innerHTML = '';
 
-//                 a.appendChild(b);
-//             });
-//         });
-// });
-async function suggestCities(query, api_key) {
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${query}&units=metric&appid=${api_key}`;
-    const response = await fetch(url);
-    if (response.ok) {
-        const results = await response.json();
-        const cities = results.map(result => result.name);
-        return cities;
-    } else {
-        return [];
+    if (cityName) {
+        const data = await getWeatherData(cityName);
+        if (data.cod === 200) {
+            displayWeather(data);
+        } else {
+            alert(data.message);
+        }
     }
 }
 
+const suggestionList = document.getElementById("suggestions");
 
-function removeSuggestions() {
-    var x = document.getElementById("suggestionsList");
-    if (x) x.parentNode.removeChild(x);
-}
+// Event listener for city name input
+search.addEventListener('input', async () => {
+    const cityName = search.value.trim();
+    suggestionList.innerHTML = '';
+
+    if (cityName) {
+        const url = `https://api.openweathermap.org/data/2.5/find?q=${cityName}&appid=fe49a1e566e9529212f0a475e5274553&units=metric`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.cod === '200' && data.count > 0) {
+            const ulsuggestion = document.createElement('ul');
+
+            data.list.forEach(city => {
+                const suggestionItem = document.createElement('li');
+                suggestionItem.textContent = city.name;
+                suggestionItem.addEventListener('click', () => {
+                    search.value = city.name;
+                    suggestionList.innerHTML = '';
+                    displayWeather(city.name)
+                        .then(data => {
+                            displayWeather(data);
+                        })
+                        .catch(error => {
+                            alert(error.message);
+                        });
+                });
+
+                ulsuggestion.appendChild(suggestionItem);
+            });
+
+            suggestionList.appendChild(ulsuggestion);
+        }
+    }
+
+});
+
+// Event listener for form submit
+document.getElementById('search-button').addEventListener('submit', event => {
+    event.preventDefault();
+    handleCityInput();
+});
+
+
+
+// function removeSuggestions() {
+//     var x = document.getElementById("suggestionsList");
+//     if (x) x.parentNode.removeChild(x);
+// }
 
 
 search.addEventListener("keydown", function (e) {

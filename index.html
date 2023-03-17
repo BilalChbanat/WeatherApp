@@ -60,20 +60,34 @@
                 <input type="text" id="city-input" class="search-bar" placeholder="Search">
                 <button class="search-button" id="search-button"><i
                         class="fas fa-sharp fa-regular fa-magnifying-glass"></i></button>
-
             </div>
             <div id="suggestions"></div>
-            <div class="weather">
-                <h2 class="city"></h2>
-                <div class="temp"></div>
-                <div class="description-container">
-                    <img src="" alt="" class="icon" />
-                    <div class="description"></div>
-                </div>
-                <div class="humidity"></div>
-                <div class="wind"></div>
+            <div class="main-divs-container">
+                <div class="latest-searches"><span>LATEST SEARCHES</span></div>
+                <div class="search-history"></div>
             </div>
         </div>
+
+        <div class="weather">
+            <div class="weather-container">
+                <div class="current-day">
+                    <div class="countainer-status-city-temp">
+                        <h1 class="city">Malaga</h1>
+                        <div class="description">description: sky clear</div>
+                        <div class="temp">50 C°</div>
+                    </div>
+                    <div class="icon-container">
+                        <img src="icons/sun&cloud_icon.png" alt="" class="icon" />
+                    </div>
+                </div>
+                <div class="humidity">10%</div>
+                <div class="wind">50 Km/h</div>
+                <div class="hr-container">
+                    <div class="hr"></div>
+                </div>
+            </div>
+        </div>
+        <div class="cards" id="weather-cards"></div>
     </main>
 
 </body>

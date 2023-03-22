@@ -2,6 +2,14 @@ let weather = {
     apiKey: "fe49a1e566e9529212f0a475e5274553",
     recentSearches: [],
     fetchWeather: function (city) {
+        if (this.recentSearches.includes(city)) {
+            // If it is, remove it from the array
+            const index = this.recentSearches.indexOf(city);
+            if (index > -1) {
+                this.recentSearches.splice(index, 1);
+            }
+        }
+
         fetch(
             "https://api.openweathermap.org/data/2.5/weather?q="
             + city
@@ -16,6 +24,7 @@ let weather = {
             })
             .then((data) => {
                 this.displayWeather(data);
+                // Push the city into the recentSearches array
                 this.recentSearches.push(city);
                 this.updateRecentSearches();
             })
@@ -23,6 +32,7 @@ let weather = {
                 alert(error.message);
             });
     },
+
     displayWeather: function (data) {
         const { name } = data;
         const { icon, description } = data.weather[0];
@@ -38,6 +48,7 @@ let weather = {
         document.querySelector(".wind").innerHTML =
             "Wind speed: " + speed + "km/h";
     },
+
     searchFunction: function () {
         this.fetchWeather(document.querySelector(".search-bar").value);
     },
@@ -47,10 +58,68 @@ let weather = {
         for (let i = this.recentSearches.length - 1; i >= 0; i--) {
             const listItem = document.createElement("li");
             listItem.innerText = this.recentSearches[i];
+            listItem.addEventListener("click", () => {
+                this.fetchWeather(this.recentSearches[i]);
+            });
             searchesList.appendChild(listItem);
         }
     },
+
 };
+const cardforecast = document.getElementById("cardforecastt");
+
+/////////////////////////////////////////
+
+
+
+async function getWeatherForecast(city) {
+    const API_KEY = 'fe49a1e566e9529212f0a475e5274553';
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`);
+    const data = await response.json();
+    const forecast = data.list.slice(0, 3);
+    console.log(`Weather forecast for ${city} in the next 3 hours:`);
+
+    const cardContainer = document.querySelector('#weather-cards');
+    cardContainer.innerHTML = '';
+
+    forecast.forEach(hour => {
+        const time = new Date(hour.dt * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        const icon = `https://openweathermap.org/img/w/${hour.weather[0].icon}.png`;
+        const temp = Math.round(hour.main.temp);
+
+        const card = document.createElement('div');
+        card.classList.add('card-forecast');
+
+        const timeEl = document.createElement('div');
+        timeEl.textContent = time;
+        timeEl.classList.add('time');
+        card.appendChild(timeEl);
+
+        const iconEl = document.createElement('img');
+        iconEl.src = icon;
+        iconEl.classList.add('iconEl');
+        card.appendChild(iconEl);
+
+        const tempEl = document.createElement('div');
+        tempEl.textContent = `${temp}°C`;
+        tempEl.classList.add('tempEl');
+        card.appendChild(tempEl);
+
+        cardContainer.appendChild(card);
+    });
+}
+
+const submitBtn = document.querySelector('#search-button');
+submitBtn.addEventListener('click', () => {
+    const cityInput = document.querySelector('#search-bar');
+    const city = cityInput.value;
+    getWeatherForecast(city);
+});
+
+
+
+
+////////////////////////////////////////
 
 // Call this function when the page loads to populate the Recent Searches list
 function loadRecentSearches() {
@@ -69,7 +138,6 @@ if (searchButton) {
         localStorage.setItem("recentSearches", JSON.stringify(weather.recentSearches));
     });
 }
-
 
 
 
@@ -225,18 +293,4 @@ search.addEventListener("keydown", function (e) {
         }
     }
 });
-
-function addActive(x) {
-    if (!x) return false;
-    removeActive(x);
-    if (currentFocus >= x.length) currentFocus = 0;
-    if (currentFocus < 0) currentFocus = x.length - 1;
-    x[currentFocus].classList.add("active");
-}
-
-function removeActive(x) {
-    for (var i = 0; i < x.length; i++) {
-        x[i].classList.remove("active");
-    }
-}
 

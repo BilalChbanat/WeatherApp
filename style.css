@@ -31,13 +31,49 @@ body::-webkit-scrollbar-thumb {
 
 main {
     margin-left: 5rem;
-
     height: 100vh;
     margin: 0;
     padding-left: 5rem;
 }
 
+.carddds-container {
+    display: flex;
+    justify-content: space-around;
+    padding-left: 3em;
+    padding-right: 3em;
+}
 
+.card-forecast {
+    display: flex;
+    border: 1px solid #000000;
+    padding: 5em 3em;
+    border-radius: 10px;
+    flex-direction: column;
+    position: relative;
+}
+
+.time {
+    display: flex;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    font-weight: bold;
+    padding-top: 15px;
+}
+
+.iconEl {
+    width: 80px;
+}
+
+.tempEl {
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    padding-left: 9%;
+    font-weight: bold;
+    padding-bottom: 20px;
+    font-size: 22px;
+}
 
 .card {
     color: white;
@@ -300,6 +336,7 @@ input.search-bar {
     margin: 0;
 }
 
+
 #suggestions ul li img {
     width: 50px;
 }
@@ -312,21 +349,20 @@ input.search-bar {
 .search-history li {
     list-style: none;
     font-weight: bolder;
-    border-radius: 10px;
+    border-radius: 30px;
     padding: 2em;
     margin: 1em;
     color: #000000;
-    border: 1px solid rgb(197, 197, 197);
+    border: 1px solid #dadada7c;
     height: auto;
     cursor: pointer;
-    background-color: #dadada67;
+    background-color: #dadada44;
     font-size: 21px;
 }
 
 .search-history li:hover {
     list-style: none;
     font-weight: bolder;
-    border-radius: 10px;
     padding: 2em;
     margin: 1em;
     color: #000000;
@@ -336,6 +372,63 @@ input.search-bar {
     background-color: #dadadac5;
     font-size: 21px;
     transition: 0.35s ease;
+}
+
+.forecast h4 {
+    margin-left: 2em;
+    color: #b6b6b6;
+}
+
+.todayforecast {
+    display: flex;
+    padding: 2em 1em;
+    justify-content: space-around;
+}
+
+.divforcast1 {
+    display: flex;
+    border: 1px solid #000000;
+    padding: 5em 3em;
+    border-radius: 10px;
+    flex-direction: column;
+    position: relative;
+
+}
+
+.divforcast1 span {
+    text-align: center;
+    position: absolute;
+    top: 0;
+    padding-left: 8%;
+    font-weight: bold;
+    padding-top: 15px;
+}
+
+.divforcast1 img {
+    width: 80px;
+}
+
+.divforcast1 p {
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    padding-left: 9%;
+    font-weight: bold;
+    padding-top: 15px;
+    font-size: 22px;
+}
+
+
+.divforcast2 {
+    border: 1px solid #000000;
+    padding: 5em 3em;
+    border-radius: 10px;
+}
+
+.divforcast3 {
+    border: 1px solid #000000;
+    padding: 5em 3em;
+    border-radius: 10px;
 }
 
 

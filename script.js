@@ -24,7 +24,6 @@ let weather = {
             })
             .then((data) => {
                 this.displayWeather(data);
-                // Push the city into the recentSearches array
                 this.recentSearches.push(city);
                 this.updateRecentSearches();
             })
@@ -57,32 +56,62 @@ let weather = {
         searchesList.innerHTML = "";
         for (let i = this.recentSearches.length - 1; i >= 0; i--) {
             const listItem = document.createElement("li");
-            listItem.innerText = this.recentSearches[i];
-            listItem.addEventListener("click", () => {
-                this.fetchWeather(this.recentSearches[i]);
-            });
-            searchesList.appendChild(listItem);
+            const listicon = document.createElement("img");
+
+            const weatherCondition = this.recentSearches[i];
+            listItem.innerText = weatherCondition;
+
+            fetch(
+                "https://api.openweathermap.org/data/2.5/weather?q=" +
+                weatherCondition +
+                "&units=metric&appid=" +
+                this.apiKey
+            )
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("City not found");
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    const { icon } = data.weather[0];
+                    const { temp } = data.main;
+
+                    listicon.src = customizeWeatherIcon(icon);
+                    listicon.classList.add("icon-latest");
+                    listItem.innerHTML = `<span class="weatherCon">${weatherCondition} </span>  <span class="tempSeg">${temp}&#176;C </span>`;
+                    const containerLatest = document.createElement("div");
+                    containerLatest.classList.add("containerLatest");
+                    listItem.prepend(listicon);
+                    containerLatest.prepend(listItem)
+
+                    listItem.addEventListener("click", () => {
+                        this.fetchWeather(weatherCondition);
+                    });
+
+                    searchesList.appendChild(listItem);
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
         }
     },
 
+
+
 };
 const cardforecast = document.getElementById("cardforecastt");
-
-/////////////////////////////////////////
-
-
 
 async function getWeatherForecast(city) {
     const API_KEY = 'fe49a1e566e9529212f0a475e5274553';
     const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`);
     const data = await response.json();
-    const forecast = data.list.slice(0, 3);
-    console.log(`Weather forecast for ${city} in the next 3 hours:`);
+    const forecast = data.list && data.list.slice(0, 3); // check if data.list exists
 
     const cardContainer = document.querySelector('#weather-cards');
     cardContainer.innerHTML = '';
 
-    forecast.forEach(hour => {
+    forecast && forecast.forEach(hour => { // check if forecast exists
         const time = new Date(hour.dt * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
         const icon = `https://openweathermap.org/img/w/${hour.weather[0].icon}.png`;
         const temp = Math.round(hour.main.temp);
@@ -109,25 +138,149 @@ async function getWeatherForecast(city) {
     });
 }
 
-const submitBtn = document.querySelector('#search-button');
-submitBtn.addEventListener('click', () => {
-    const cityInput = document.querySelector('#search-bar');
-    const city = cityInput.value;
+const form = document.querySelector('.search-button');
+const input = document.querySelector('#city-input');
+
+form.addEventListener('click', event => {
+    event.preventDefault();
+    const city = input.value;
     getWeatherForecast(city);
 });
+async function getForecast(city) {
+    const API_KEY = 'fe49a1e566e9529212f0a475e5274553';
+    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        const forecasts = [];
+
+        for (let i = 0; i < data.list.length; i++) {
+            const date = new Date(data.list[i].dt_txt);
+            const day = date.getDay();
+
+            if (day === new Date().getDay() && forecasts.length === 0) {
+                forecasts.push({ date: 'Today', temperature: data.list[i].main.temp, icon: data.list[i].weather[0].icon });
+            } else if (day === new Date().getDay() + 1 && forecasts.length === 1) {
+                forecasts.push({ date: 'Tomorrow', temperature: data.list[i].main.temp, icon: data.list[i].weather[0].icon });
+            } else if (day === new Date().getDay() + 2 && forecasts.length === 2) {
+                forecasts.push({ date: 'Day after tomorrow', temperature: data.list[i].main.temp, icon: data.list[i].weather[0].icon });
+                break;
+            }
+        }
+
+        return forecasts;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+form.addEventListener('click', async event => {
+    event.preventDefault();
+    const city = input.value;
+    const forecasts = await getForecast(city);
+    const forecastContainer = document.querySelector('.forecast-container');
+    forecastContainer.innerHTML = '';
+
+    forecasts.forEach(forecast => {
+        const forecastDiv = document.createElement('div');
+        forecastDiv.classList.add("week-forecast");
+        const dateDiv = document.createElement('div');
+        dateDiv.classList.add("date-week");
+        const iconImg = document.createElement('img');
+        iconImg.classList.add("iconEl");
+        const tempDiv = document.createElement('div');
+        tempDiv.classList.add("temp-week");
+
+        dateDiv.textContent = forecast.date;
+        iconImg.src = `https://openweathermap.org/img/w/${forecast.icon}.png`;
+        tempDiv.textContent = `${forecast.temperature} °C`;
+
+        forecastDiv.appendChild(dateDiv);
+        forecastDiv.appendChild(iconImg);
+        forecastDiv.appendChild(tempDiv);
+
+        forecastContainer.appendChild(forecastDiv);
+    });
+});
+
+async function showMalagaWeather() {
+    const apiKey = 'fe49a1e566e9529212f0a475e5274553';
+    const city = 'Malaga';
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        const cityNameEl = document.querySelector('.cityNmae-more-suggetions');
+        cityNameEl.textContent = data.name;
+
+        const iconEl = document.querySelector('.iconEl');
+        iconEl.src = `https://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+
+        const tempEl = document.querySelector('.temp-more-suggtions');
+        tempEl.textContent = `${data.main.temp}°C`;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+showMalagaWeather()
+async function showMadridWeather() {
+    const apiKey = 'fe49a1e566e9529212f0a475e5274553';
+    const city = 'Madrid';
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        const cityNameEl = document.querySelector('.cityNmae-more-suggetions1');
+        cityNameEl.textContent = data.name;
+
+        const iconEl = document.querySelector('.iconEl1');
+        iconEl.src = `https://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+
+        const tempEl = document.querySelector('.temp-more-suggtions1');
+        tempEl.textContent = `${data.main.temp}°C`;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+showMadridWeather()
+async function showMarrakechWeather() {
+    const apiKey = 'fe49a1e566e9529212f0a475e5274553';
+    const city = 'Marrakech';
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        const cityNameEl = document.querySelector('.cityNmae-more-suggetions2');
+        cityNameEl.textContent = data.name;
+
+        const iconEl = document.querySelector('.iconEl2');
+        iconEl.src = `https://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+
+        const tempEl = document.querySelector('.temp-more-suggtions2');
+        tempEl.textContent = `${data.main.temp}°C`;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+showMarrakechWeather()
 
 
-
-
-////////////////////////////////////////
-
-// Call this function when the page loads to populate the Recent Searches list
 function loadRecentSearches() {
     weather.recentSearches = JSON.parse(localStorage.getItem("recentSearches")) || [];
     weather.updateRecentSearches();
 }
 
-// Save the recent searches to local storage whenever a new search is made
 const searchButton = document.querySelector(".search-btn");
 if (searchButton) {
     searchButton.addEventListener("click", function () {
@@ -141,7 +294,6 @@ if (searchButton) {
 
 
 
-// Call the loadRecentSearches function when the page loads
 window.addEventListener("load", loadRecentSearches);
 
 
@@ -264,10 +416,6 @@ document.getElementById('search-button').addEventListener('submit', event => {
 
 
 
-// function removeSuggestions() {
-//     var x = document.getElementById("suggestionsList");
-//     if (x) x.parentNode.removeChild(x);
-// }
 search.addEventListener("keydown", function (e) {
     var x = document.getElementById("suggestionsList");
     if (x) x = x.getElementsByTagName("li");

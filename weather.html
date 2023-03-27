@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="scriptWeathe.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="styleWeather.css">
+    <title>Weather</title>
+</head>
+
+<body>
+    <nav class="navbar">
+        <ul class="navbar-nav">
+            <li class="logo">
+                <a href="#" class="nav-link">
+                    <i id="main-icon" class="fa-solid fa-wind"></i>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i id="icons" class="fa-solid fa-cloud-sun-rain"></i>
+                    <span class="link-text">Weather</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-regular fa-bars"></i>
+                    <span class="link-text">Cities</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fa-solid fa-map"></i>
+                    <span class="link-text">Map</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-sharp fa-regular fa-sliders"></i>
+                    <span class="link-text">Settings</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="card">
+            <form action="#" class="search">
+                <input type="text" id="city-input" class="search-bar" placeholder="Search for cities">
+                <button class="search-button" id="search-button"><i
+                        class="fas fa-sharp fa-regular fa-magnifying-glass"></i></button>
+            </form>
+            <div id="suggestions"></div>
+            <div class="container">
+                <div class="info">
+                    <div class="display">
+                        <h1 class="city-info">Madrid</h1>
+                        <div class="humidity-weather-info">Humidity 20%</div>
+                        <div class="temp-weather-info">31°C</div>
+                    </div>
+                    <div class="icon-weather-info">
+                        <img class="icon" src="icons/sun&cloud_icon.png" alt="">
+                    </div>
+                </div>
+                <div class="forecast-all-day">
+                    <div class="forecast-title">TODAY'S FORECAST</div>
+                    <div class="all-day-forecast">
+                        <div class="div-card-forecast-info">
+                            <div class="clock">6:00AM</div>
+                            <div class="div-forecast-info-icon">
+                                <img class="f-icon" src="icons/sun&cloud_icon.png" alt="">
+                            </div>
+                            <div class="temp-of-day-info">25°</div>
+                        </div>
+                        <div class="div-card-forecast-info">
+                            <div class="clock">6:00AM</div>
+                            <div class="div-forecast-info-icon">
+                                <img src="https://i.ibb.co/1nxNGHL/10.png" alt="">
+                            </div>
+                            <div class="temp-of-day-info">8°</div>
+                        </div>
+                        <div class="div-card-forecast-info">
+                            <div class="clock">6:00AM</div>
+                            <div class="div-forecast-info-icon">
+                                <img src="icons/sun&cloud_icon.png" alt="">
+                            </div>
+                            <div class="temp-of-day-info">25°</div>
+                        </div>
+                        <div class="div-card-forecast-info">
+                            <div class="clock">6:00AM</div>
+                            <div class="div-forecast-info-icon">
+                                <img src="icons/sun&cloud_icon.png" alt="">
+                            </div>
+                            <div class="temp-of-day-info">25°</div>
+                        </div>
+                        <div class="div-card-forecast-info">
+                            <div class="clock">6:00AM</div>
+                            <div class="div-forecast-info-icon">
+                                <img src="icons/sun&cloud_icon.png" alt="">
+                            </div>
+                            <div class="temp-of-day-info">25°</div>
+                        </div>
+                        <div class="div-card-forecast-info">
+                            <div class="clock">6:00AM</div>
+                            <div class="div-forecast-info-icon">
+                                <img src="icons/sun&cloud_icon.png" alt="">
+                            </div>
+                            <div class="temp-of-day-info">25°</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="air-condition">
+                    <div class="air-hum-fell-container-div">
+                        <div class="forecast-title">AIR CONDITIONS</div>
+                        <div class="real-feel">
+                            <div class="fell-vaontainer">
+                                <i class="fa-solid fa-temperature-quarter fa-2xl"></i>
+                                <div class="divre">Real Feel</div>
+                            </div>
+                            <div class="temp-of-air">30°</div>
+                        </div>
+                        <div class="chanceOfRain">
+                            <div class="rain-caontainer">
+                                <i class="fa-solid fa-droplet fa-xl"></i>
+                                <div class="divrehumidity">humidity</div>
+                            </div>
+                            <div class="temp-of-air">39%</div>
+                        </div>
+                    </div>
+
+                    <div class="wiuvi">
+                        <div class="wind-feel">
+                            <div class="fell-wind-vaontainer">
+                                <i class="fa-solid fa-wind fa-2xl"></i>
+                                <div class="divre-wind">Wind</div>
+                            </div>
+                            <div class="temp-of-air-wind">12.9km\h</div>
+                        </div>
+                        <div class="chanceOfRain">
+                            <div class="uvIndex-caontainer">
+                                <i class="fa-sharp fa-solid fa-sun fa-2xl"></i>
+                                <div class="divre-uv-Index">UV Index</div>
+                            </div>
+                            <div class="temp-of-air-uvindex">7.2</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="weekend-forecast">
+        </div>
+
+    </main>
+
+</body>
+
+</html>

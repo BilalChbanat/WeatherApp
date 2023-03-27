@@ -18,7 +18,7 @@ let weather = {
         )
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error("City not found");
+                    throw new Error("City not found :\\");
                 }
                 return response.json();
             })
@@ -27,9 +27,22 @@ let weather = {
                 this.recentSearches.push(city);
                 this.updateRecentSearches();
             })
+
             .catch((error) => {
-                alert(error.message);
+                const errorMessages = [];
+                // check if error message already exists in array
+                if (!errorMessages.includes(error.message)) {
+                    errorMessages.push(error.message); // add error message to array
+                    const errorMessage = document.createElement("li");
+                    errorMessage.textContent = error.message;
+                    const errorList = document.createElement("ul");
+                    errorMessage.classList.add("li-sepecial")
+                    errorList.appendChild(errorMessage);
+                    const errorDiv = document.getElementById("suggestions")
+                    errorDiv.appendChild(errorList);
+                }
             });
+
     },
 
     displayWeather: function (data) {
@@ -48,6 +61,7 @@ let weather = {
             "Wind speed: " + speed + "km/h";
     },
 
+
     searchFunction: function () {
         this.fetchWeather(document.querySelector(".search-bar").value);
     },
@@ -56,6 +70,7 @@ let weather = {
         searchesList.innerHTML = "";
         for (let i = this.recentSearches.length - 1; i >= 0; i--) {
             const listItem = document.createElement("li");
+            listItem.classList.add("li-historyy");
             const listicon = document.createElement("img");
 
             const weatherCondition = this.recentSearches[i];
@@ -167,6 +182,8 @@ async function getForecast(city) {
             } else if (day === new Date().getDay() + 2 && forecasts.length === 2) {
                 forecasts.push({ date: 'Day after tomorrow', temperature: data.list[i].main.temp, icon: data.list[i].weather[0].icon });
                 break;
+            } else if (forecasts.length === 3) {
+                break; // Stop adding forecasts if we already have all three
             }
         }
 
@@ -175,6 +192,7 @@ async function getForecast(city) {
         console.error(error);
     }
 }
+
 
 form.addEventListener('click', async event => {
     event.preventDefault();
@@ -268,6 +286,7 @@ async function showMarrakechWeather() {
 
         const tempEl = document.querySelector('.temp-more-suggtions2');
         tempEl.textContent = `${data.main.temp}°C`;
+
     } catch (error) {
         console.log(error);
     }
@@ -441,4 +460,82 @@ search.addEventListener("keydown", function (e) {
         }
     }
 });
+
+let geocode = {
+    reverseGeocode: function (latitude, longitude) {
+        var api_key = 'e63dbc33896144bc8bf2e0be6c5b6f69';
+
+        var query = latitude + ',' + longitude;
+
+        var api_url = 'https://api.opencagedata.com/geocode/v1/json'
+
+        var request_url = api_url
+            + '?'
+            + 'key=' + api_key
+            + '&q=' + encodeURIComponent(query)
+            + '&pretty=1'
+            + '&no_annotations=1';
+
+
+        var request = new XMLHttpRequest();
+        request.open('GET', request_url, true);
+
+        request.onload = function () {
+
+
+            if (request.status === 200) {
+                // Success!
+                var data = JSON.parse(request.responseText);
+                weather.fetchWeather(data.results[0].components.city);
+                console.log(data.results[0].components.city) // print the location
+
+            } else if (request.status <= 500) {
+                // We reached our target server, but it returned an error
+
+                console.log("unable to geocode! Response code: " + request.status);
+                var data = JSON.parse(request.responseText);
+                console.log('error msg: ' + data.status.message);
+            } else {
+                console.log("server error");
+            }
+        };
+
+        request.onerror = function () {
+            // There was a connection error of some sort
+            console.log("unable to connect to server");
+        };
+
+        request.send();  // make the request
+    },
+
+    getLocation: function () {
+        function success(data) {
+            geocode.reverseGeocode(data.coords.latitude, data.coords.longitude);
+        }
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, console.error);
+        }
+        else {
+            weather.fetchWeather("Denver");
+        }
+    }
+};
+geocode.getLocation();
+
+document.querySelector(".search button").addEventListener("click", function () {
+    weather.search();
+});
+
+function displayCityWeather(city) {
+    weather.fetchWeather(city);
+}
+
+
+document
+    .querySelector(".search-bar")
+    .addEventListener("keyup", function (event) {
+        if (event.key == "Enter") {
+            weather.search();
+        }
+    });
 

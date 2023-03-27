@@ -12,7 +12,7 @@
         integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style.css">
-    <title>Weather</title>
+    <title>Weather cities</title>
 </head>
 
 <body>
@@ -25,7 +25,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="weather.html" class="nav-link">
                     <i id="icons" class="fa-solid fa-cloud-sun-rain"></i>
                     <span class="link-text">Weather</span>
                 </a>
@@ -64,23 +64,25 @@
             <div id="suggestions"></div>
             <div class="main-divs-container">
                 <div class="latest-searches"><span>LATEST SEARCHES</span></div>
-                <div class="search-history"></div>
+                <div class="search-history">
+                    <ul class="ulhistory"></ul>
+                </div>
             </div>
             <span class="more-suggetion-span">MORE SUGGESTIONS</span>
             <div class="conntainer-more-sugg">
-                <div class="card-more-sugg">
+                <div class="card-more-sugg" onclick="displayCityWeather('Malaga')">
                     <div class="cityNmae-more-suggetions">Malaga</div>
                     <img src="https://openweathermap.org/img/w/13n.png" class="iconEl">
                     <div class="temp-more-suggtions">-6°C</div>
                 </div>
 
-                <div class="card-more-sugg">
+                <div class="card-more-sugg" onclick="displayCityWeather('Madrid')">
                     <div class="cityNmae-more-suggetions1">Madrid</div>
                     <img src="https://openweathermap.org/img/w/13n.png" class="iconEl1">
                     <div class="temp-more-suggtions1">-6°C</div>
                 </div>
 
-                <div class="card-more-sugg">
+                <div class="card-more-sugg" onclick="displayCityWeather('Marrakech')">
                     <div class="cityNmae-more-suggetions2">Marrakech</div>
                     <img src="https://openweathermap.org/img/w/13n.png" class="iconEl2">
                     <div class="temp-more-suggtions2">-6°C</div>

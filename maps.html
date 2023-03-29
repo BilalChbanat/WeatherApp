@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Map</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        :root {
+            font-size: 16px;
+            font-family: 'Ramabhadra', sans-serif;
+            --text-primary: #b6b6b6;
+            --text-secondary: #ececec;
+            --bg-primary: #ffffff;
+            --bg-secondary: #9e9ef0;
+            --transition-speed: 600ms;
+        }
+
+        body {
+            color: black;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        body::-webkit-scrollbar {
+            width: 0.25rem;
+
+        }
+
+        body::-webkit-scrollbar-track {
+            background: #b7b7b9;
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background: #6c6c6d;
+            border-radius: 1em;
+        }
+
+        main {
+            margin-left: 3rem;
+            height: 100vh;
+            padding-left: 5rem;
+        }
+
+
+
+
+        .card {
+            color: white;
+            border-radius: 30px;
+            width: 60%;
+            max-width: 60%;
+            margin: 1em;
+        }
+
+
+        #suggestions ul {
+            width: 90%;
+            max-height: 300px;
+            overflow-y: auto;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            background-color: #ffffff;
+            margin-top: 0;
+            margin-left: 1em;
+            padding: 0;
+        }
+
+        #suggestions ul li {
+            display: flex;
+            padding: 10px 15px;
+            border-bottom: 1px solid #f1f1f1;
+            cursor: pointer;
+            color: rgb(0, 0, 0);
+            text-transform: capitalize;
+            list-style: none;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #suggestions ul li:hover {
+            background-color: #f1f1f1;
+        }
+
+        #suggestions ul li.active {
+            background-color: #f1f1f1;
+        }
+
+        .li-sepecial {
+            padding: 1em;
+        }
+
+
+        .search-button {
+            margin: 0.5em;
+            border-radius: 50%;
+            border: none;
+            height: 3.4em;
+            width: 3.4em;
+            outline: none;
+            background: #afafaf2b;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s ease-in-out;
+        }
+
+        .search-button:hover {
+            background: #cecece2b;
+        }
+
+        input.search-bar {
+            border: none;
+            outline: none;
+            padding: 0.5em 1em;
+            border-radius: 24px;
+            background-color: #afafaf2b;
+            color: #000000;
+            font-size: 120%;
+            width: 100%;
+        }
+
+
+        .navbar {
+            position: fixed;
+            background-color: #ebebeb;
+            transition: width 600ms ease;
+        }
+
+        .navbar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+
+            justify-content: space-between;
+        }
+
+        .nav-item {
+            width: 100%;
+            text-align: center;
+        }
+
+        .nav-item:last-child {
+            margin-top: auto;
+
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            height: 5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition-speed);
+            padding-left: 0.1em;
+            padding-top: 1.5em;
+            flex-direction: column;
+        }
+
+        .nav-link span {
+            padding-right: 18px;
+            padding-top: 9px;
+        }
+
+        .nav-link:hover {
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .link-text {
+            margin-left: 1rem;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .logo {
+            background-color: #ebebeb;
+            font-size: 1.5rem;
+            width: 100%;
+        }
+
+        #main-icon {
+            padding-top: 1em;
+            border: 1px solid #c6c4d3;
+            padding: 8px;
+            border-radius: 14px;
+            background-color: #c6c4d3;
+            color: #9e9ef0;
+        }
+
+        #icons {
+            width: 50px;
+        }
+
+        .icon {
+            width: 59%;
+        }
+
+        #ul-s {
+            color: #000000;
+        }
+
+        .sett {
+            background-color: #6c6c6d50;
+            border: none;
+            border-radius: 20px;
+            width: 50%;
+        }
+
+        .title {
+            font-weight: bold;
+            color: #6c6c6d;
+            padding: 1em;
+            margin-top: 5em;
+        }
+
+        .btn-container {
+            border: none;
+            display: flex;
+            margin: 1em 1em 1em 5em;
+            background-color: #9c9c9ca4;
+            padding: 1em;
+            border-radius: 20px;
+            width: 65%;
+            justify-content: space-around;
+        }
+
+        .btn-container a {
+            text-decoration: none;
+            color: #494949;
+        }
+
+        .btn-container a:hover {
+            text-decoration: none;
+            background-color: #949494;
+
+        }
+
+        .settings-title {
+            padding-top: 1.8em;
+            padding-bottom: 1em;
+        }
+
+        .celsius {
+            background-color: #9c9c9ca4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .navbar {
+                bottom: 0;
+                width: 100vw;
+                height: 5rem;
+            }
+
+            .logo {
+                display: none;
+            }
+
+            .navbar-nav {
+                flex-direction: row;
+            }
+
+            .nav-link {
+                justify-content: center;
+            }
+
+            /* 
+    main {
+        margin: 0;
+    } */
+
+            .nav-item:last-child {
+                margin-top: 0;
+
+            }
+        }
+
+
+        @media only screen and (min-width: 600px) {
+            .navbar {
+                top: 0;
+                width: 5rem;
+                height: 100vh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <ul class="navbar-nav">
+            <li class="logo">
+                <a href="index.html" class="nav-link">
+                    <i id="main-icon" class="fa-solid fa-wind"></i>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="weather.html" class="nav-link">
+                    <i id="icons" class="fa-solid fa-cloud-sun-rain"></i>
+                    <span class="link-text">Weather</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-regular fa-bars"></i>
+                    <span class="link-text">Cities</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fa-solid fa-map"></i>
+                    <span class="link-text">Map</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="settings.html" class="nav-link">
+                    <i class="fas fa-sharp fa-regular fa-sliders"></i>
+                    <span class="link-text">Settings</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <div id="map" style="height: 322em; margin-left:5rem ;"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="maps.js"></script>
+</body>
+
+</html>

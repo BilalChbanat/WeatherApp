@@ -71,31 +71,41 @@ let weather = {
     displayCurrentWeather: function (data) {
         const cityInfo = document.querySelector(".city-info");
         const humidityInfo = document.querySelector(".humidity-weather-info");
+        const tempair = document.querySelector(".temp-of-air");
         const tempInfo = document.querySelector(".temp-weather-info");
+        const windspeed = document.querySelector(".temp-of-air-wind");
+        const tempaire = document.querySelector(".temp-of-humidity");
         const iconInfo = document.querySelector(".icon");
 
         cityInfo.innerText = data.name;
         humidityInfo.innerText = "Humidity " + data.main.humidity + "%";
+        tempaire.innerText = data.main.humidity + "%";
+        windspeed.innerText = data.wind.speed + " km\h";
         tempInfo.innerText = data.main.temp.toFixed(0) + "°C";
+
+        tempair.innerText = data.main.temp.toFixed(0) + "°C";
         iconInfo.setAttribute("src", customizeWeatherIcon(data.weather[0].icon));
     },
 
-    // displayForecast: function (dailyForecasts) {
-    //     const forecastContainer = document.querySelector(".weekend-forecast");
+    displayForecast: function (dailyForecasts) {
+        const forecastContainer = document.querySelector(".weekend-forecast");
 
-    //     for (let i = 0; i < dailyForecasts.length; i++) {
-    //         const forecast = dailyForecasts[i];
-    //         const forecastElement = document.createElement("div");
-    //         forecastElement.classList.add("forecast-all-days-week");
-    //         forecastElement.innerHTML = `
-    //       <div class="div-day${i}name">${this.getDayName(forecast.day)}</div>
-    //       <img src="${this.getWeatherIconUrl(forecast.icon)}" alt="">
-    //       <div class="descr-forecast">${forecast.description}</div>
-    //       <div class="dateforecastoweek">${forecast.temp.toFixed(0)}°C</div>
-    //     `;
-    //         forecastContainer.appendChild(forecastElement);
-    //     }
-    // },
+        // clear old forecasts
+        forecastContainer.innerHTML = "";
+
+        for (let i = 0; i < dailyForecasts.length; i++) {
+            const forecast = dailyForecasts[i];
+            const forecastElement = document.createElement("div");
+            forecastElement.classList.add("forecast-all-days-week");
+            forecastElement.innerHTML = `
+            <div class="div-day${i}name">${this.getDayName(forecast.day)}</div>
+            <img src="${this.getWeatherIconUrl(forecast.icon)}" alt="">
+            <div class="descr-forecast">${forecast.description}</div>
+            <div class="dateforecastoweek">${forecast.temp.toFixed(0)}°C</div>
+          `;
+            forecastContainer.appendChild(forecastElement);
+        }
+    },
 
     getDayName: function (dayIndex) {
         const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -117,6 +127,7 @@ formElement.addEventListener("click", (event) => {
     const city = inputElement.value;
     weather.fetchCurrentWeather(city);
     weather.fetchForecast(city);
+    getWeatherForecast(city);
 });
 
 
@@ -152,54 +163,66 @@ function customizeWeatherIcon(icon) {
     }
 }
 
-function fetch6hForecast(city) {
-    const apiKey = "fe49a1e566e9529212f0a475e5274553";
-    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`;
+
+function getWeatherForecast(city) {
+    const apiKey = 'fe49a1e566e9529212f0a475e5274553'; // replace with your OpenWeatherMap API key
+    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?appid=${apiKey}&q=${city}`;
+    // replace YOUR_LOCATION_HERE with the location you want to get weather for
 
     fetch(apiUrl)
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("City not found :\\");
-            }
-            return response.json();
+        .then(response => response.json())
+        .then(data => {
+            const forecast = data.list.slice(0, 6); // get the first 6 items in the list (next 6 hours)
+
+            // display the forecast
+            const allDayForecastElement = document.querySelector('.all-day-forecast');
+            allDayForecastElement.innerHTML = `
+                    ${forecast.map(item => {
+                const date = new Date(item.dt * 1000); // convert Unix timestamp to JS Date object
+                const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // format time as HH:MM
+                const temp = Math.round(item.main.temp - 273.15); // convert temperature from Kelvin to Celsius
+                const desc = item.weather[0].description;
+                const iconUrl = `https://openweathermap.org/img/w/${item.weather[0].icon}.png`; // get the URL of the weather icon
+
+                return `        
+                <div class="div-card-forecast-info">
+                                <div class="clock">${time}</div>
+                                <div class="div-forecast-info-icon"><img src="${iconUrl}" alt="${desc}"></div>
+                                <div class="temp-of-day-info">${temp}°C</div>
+                                </div>`;
+            }).join('')}
+                
+            `;
         })
-        .then((data) => {
-            const forecasts = data.list.filter((forecast) => {
-                // Get the date and time for the current forecast
-                const forecastTime = new Date(forecast.dt_txt);
-                const forecastHour = forecastTime.getHours();
-                const forecastMinutes = forecastTime.getMinutes();
-
-                // Get the date and time for the next 6 hours
-                const currentTime = new Date();
-                const next6hTime = new Date(currentTime.getTime() + 6 * 60 * 60 * 1000);
-                const next6hHour = next6hTime.getHours();
-
-                // Check if the current forecast is within the next 6 hours
-                return forecastHour >= next6hHour;
-            });
-
-            // Update the HTML for each forecast
-            forecasts.forEach((forecast, index) => {
-                const forecastTime = new Date(forecast.dt_txt);
-                const forecastHour = forecastTime.getHours();
-                const forecastMinutes = forecastTime.getMinutes();
-                const iconUrl = customizeWeatherIcon(forecast.weather[0].icon);
-                const temperature = Math.round(forecast.main.temp);
-
-                // Update the HTML for the current forecast card
-                const card = document.getElementsByClassName("div-card-forecast-info")[index];
-                card.querySelector(".clock").textContent = `${forecastHour}:${forecastMinutes < 10 ? '0' + forecastMinutes : forecastMinutes}`;
-                card.querySelector(".f-icon").src = iconUrl;
-                card.querySelector(".temp-of-day-info").textContent = `${temperature}°`;
-            });
-        })
-        .catch((error) => {
-            console.log(error.message);
-        });
+        .catch(error => console.error(error));
 }
 
 
-fetch6hForecast("New York");
 
+async function getUVIndex(apiKey, lat, lon) {
+    const url = `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data.value;
+}
 
+async function main() {
+    const apiKey = 'fe49a1e566e9529212f0a475e5274553';
+    const cityInput = document.querySelector('.search-bar');
+    const submitButton = document.querySelector('#search-button');
+
+    submitButton.addEventListener('click', async () => {
+        const city = cityInput.value;
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        const lat = data.coord.lat;
+        const lon = data.coord.lon;
+        const uvIndex = await getUVIndex(apiKey, lat.toString(), lon.toString());
+
+        const uvindex = document.querySelector(".temp-of-air-uvindex");
+        uvindex.innerText = uvIndex;
+    });
+}
+
+main();

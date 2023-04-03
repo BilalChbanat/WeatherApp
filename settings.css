@@ -207,7 +207,7 @@ input.search-bar {
 .title {
     font-weight: bold;
     color: #6c6c6d;
-    padding: 1em;
+    padding-left: 2em;
     margin-top: 5em;
 }
 
@@ -216,21 +216,10 @@ input.search-bar {
     display: flex;
     margin: 1em 1em 1em 5em;
     background-color: #9c9c9ca4;
-    padding: 1em;
+    padding: 0.4em;
     border-radius: 20px;
     width: 65%;
-    justify-content: space-around;
-}
-
-.btn-container a {
-    text-decoration: none;
-    color: #494949;
-}
-
-.btn-container a:hover {
-    text-decoration: none;
-    background-color: #949494;
-
+    justify-content: space-between;
 }
 
 .settings-title {
@@ -239,13 +228,42 @@ input.search-bar {
 }
 
 .celsius {
-    background-color: #9c9c9ca4;
+    background-color: rgba(156, 156, 156, 0.062);
     color: white;
+    border-radius: 10px;
     border: none;
     padding: 10px 20px;
-    margin: 10px;
+    margin: 0;
     font-size: 16px;
     cursor: pointer;
+    width: 49%;
+    font-weight: bold;
+}
+
+.celsius-s {
+    background-color: rgba(156, 156, 156, 0.062);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin: 0;
+    font-size: 16px;
+    cursor: pointer;
+    width: 33%;
+    font-weight: bold;
+}
+
+.celsius-t {
+    background-color: rgba(156, 156, 156, 0.062);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin: 0;
+    font-size: 16px;
+    cursor: pointer;
+    width: 24%;
+    font-weight: bold;
 }
 
 @media only screen and (max-width: 600px) {

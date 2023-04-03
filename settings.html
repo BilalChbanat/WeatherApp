@@ -10,8 +10,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
         integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="settings.js" defer></script>
+    <script src="scriptWeathe.js" defer></script>
     <link rel="stylesheet" href="settings.css">
-    <title>Weather cities</title>
+    <title>Settings</title>
 </head>
 
 <body>
@@ -62,52 +64,39 @@
                 <div class="settings-title">
                     <span class="title">TEMPERATURE</span>
                     <div class="btn-container">
-                        <button class="celsius">Celsius</button>
-                        <button class="celsius">Fahrenheit</button>
+                        <button class="celsius" id="celsius">Celsius</button>
+                        <button class="celsius" id="fahrenheit">Fahrenheit</button>
                     </div>
                 </div>
                 <div class="settings-title">
                     <span class="title">WIND SPEED</span>
                     <div class="btn-container">
-                        <button class="celsius">km/h</button>
-                        <button class="celsius">m/s</button>
-                        <button class="celsius">knots</button>
+                        <button class="celsius-s" id="km">km/h</button>
+                        <button class="celsius-s" id="ms">m/s</button>
+                        <button class="celsius-s" id="knots">knots</button>
                     </div>
                 </div>
                 <div class="settings-title">
                     <span class="title">PRESSURE</span>
                     <div class="btn-container">
-                        <button class="celsius">hPa</button>
-                        <button class="celsius">Inches</button>
-                        <button class="celsius">kPa</button>
-                        <button class="celsius">mm</button>
+                        <button class="celsius-t" id="hpa">hPa</button>
+                        <button class="celsius-t" id="inchesw">Inches</button>
+                        <button class="celsius-t" id="kpa">kPa</button>
+                        <button class="celsius-t" id="mm">mm</button>
                     </div>
                 </div>
                 <div class="settings-title">
                     <span class="title">PRECIPITATION</span>
                     <div class="btn-container">
-                        <button class="celsius">Milimeters</button>
-                        <button class="celsius">Inches</button>
+                        <button class="celsius" id="milimeters">Milimeters</button>
+                        <button class="celsius" id="inches">Inches</button>
                     </div>
                 </div>
                 <div class="settings-title">
                     <span class="title">DISTANCE</span>
                     <div class="btn-container">
-                        <button class="celsius">Kilometers</button>
-                        <button class="celsius">Miles</button>
-                    </div>
-                </div>
-            </div>
-            <div class="notificatins">
-                <span class="notificatin-title">Notifications</span>
-                <div class="notification-card">
-                    <div class="text-n-container">
-                        <div class="n-text">
-                            <span>Notifications</span>
-                            <label>
-                                <input type="checkbox">
-                            </label>
-                        </div>
+                        <button class="celsius" id="kilometers">Kilometers</button>
+                        <button class="celsius" id="miles">Miles</button>
                     </div>
                 </div>
             </div>
@@ -135,6 +124,7 @@
         </div> -->
     </main>
 
+    <script src="scriptWeathe.js" defer></script>
 </body>
 
 </html>

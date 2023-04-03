@@ -333,7 +333,7 @@ input.search-bar {
 
 .air-condition {
     background-color: #cccccc75;
-    height: 20em;
+    height: 18em;
     border: none;
     border-radius: 20px;
     margin-top: 1em;
@@ -361,6 +361,16 @@ input.search-bar {
 
 }
 
+.unit-toggle {
+    width: 3em;
+    font-size: 1em;
+    border-radius: 25px;
+    padding: 7px;
+    font-weight: bold;
+    border: none;
+    background-color: rgb(235, 235, 235);
+    cursor: pointer;
+}
 
 .temp-of-air {
     color: #000000;

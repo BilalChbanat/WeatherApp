@@ -1,11 +1,9 @@
 let weather = {
     apiKey: "fe49a1e566e9529212f0a475e5274553",
+    unit: "metric", // default to Celsius
     fetchForecast: function (city) {
         fetch(
-            "https://api.openweathermap.org/data/2.5/forecast?q=" +
-            city +
-            "&units=metric&appid=" +
-            this.apiKey
+            `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=${this.unit}&appid=${this.apiKey}`
         )
             .then((response) => {
                 if (!response.ok) {
@@ -14,10 +12,8 @@ let weather = {
                 return response.json();
             })
             .then((data) => {
-
                 const dailyForecasts = this.getDailyForecasts(data.list);
                 this.displayForecast(dailyForecasts);
-
             })
             .catch((error) => {
                 console.log(error.message);
@@ -49,10 +45,7 @@ let weather = {
 
     fetchCurrentWeather: function (city) {
         fetch(
-            "https://api.openweathermap.org/data/2.5/weather?q=" +
-            city +
-            "&units=metric&appid=" +
-            this.apiKey
+            `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${this.unit}&appid=${this.apiKey}`
         )
             .then((response) => {
                 if (!response.ok) {
@@ -64,7 +57,7 @@ let weather = {
                 this.displayCurrentWeather(data);
             })
             .catch((error) => {
-                alert(error.message);
+                console.log(error.message);
             });
     },
 
@@ -76,36 +69,81 @@ let weather = {
         const windspeed = document.querySelector(".temp-of-air-wind");
         const tempaire = document.querySelector(".temp-of-humidity");
         const iconInfo = document.querySelector(".icon");
+        const unitToggle = document.querySelector("#fahrenheit");
 
         cityInfo.innerText = data.name;
-        humidityInfo.innerText = "Humidity " + data.main.humidity + "%";
-        tempaire.innerText = data.main.humidity + "%";
-        windspeed.innerText = data.wind.speed + " km\h";
-        tempInfo.innerText = data.main.temp.toFixed(0) + "°C";
-
-        tempair.innerText = data.main.temp.toFixed(0) + "°C";
+        humidityInfo.innerText = `Humidity ${data.main.humidity}%`;
+        tempaire.innerText = `${data.main.humidity}%`;
+        windspeed.innerText = `${data.wind.speed} km/h`;
+        const tempInCelsius = data.main.temp;
+        const tempInFahrenheit = (tempInCelsius * 9 / 5) + 32;
+        let currentTemp = tempInCelsius;
+        let unit = "C";
+        if (this.unit === "imperial") {
+            currentTemp = tempInFahrenheit;
+            unit = "F";
+        }
+        tempInfo.innerText = `${currentTemp.toFixed(0)}°${unit}`;
+        tempair.innerText = `${currentTemp.toFixed(0)}°${unit}`;
         iconInfo.setAttribute("src", customizeWeatherIcon(data.weather[0].icon));
+
+        // add event listener to unit toggle button
+        unitToggle.addEventListener("click", () => {
+            if (this.unit === "metric") {
+                this.unit = "imperial";
+                currentTemp = tempInFahrenheit;
+                unit = "F";
+            } else {
+                this.unit = "metric";
+                currentTemp = tempInCelsius;
+                unit = "C";
+            }
+            tempInfo.innerText = `${currentTemp.toFixed(0)}°${unit}`;
+            tempair.innerText = `${currentTemp.toFixed(0)}°${unit}`;
+            this.fetchCurrentWeather(data.name); // re-fetch weather data with new unit
+            this.fetchForecast(data.name); // re-fetch forecast data
+        })
     },
 
     displayForecast: function (dailyForecasts) {
+        let isFahrenheit = false; // default to Celsius
+
         const forecastContainer = document.querySelector(".weekend-forecast");
 
         // clear old forecasts
         forecastContainer.innerHTML = "";
 
+        isFahrenheit = false; // default to Celsius
+
+        // check if the temperature unit should be changed to Fahrenheit
+        const changeUnitBtn = document.querySelector(".unit-toggle");
+        if (changeUnitBtn) {
+            changeUnitBtn.addEventListener("click", function () {
+                isFahrenheit = !isFahrenheit;
+                // re-render forecast with the new temperature unit
+                displayForecast(dailyForecasts);
+            });
+        }
+
         for (let i = 0; i < dailyForecasts.length; i++) {
             const forecast = dailyForecasts[i];
             const forecastElement = document.createElement("div");
             forecastElement.classList.add("forecast-all-days-week");
+
+            // convert temperature to Fahrenheit if needed
+            const temp = isFahrenheit ? (forecast.temp * 9 / 5) + 32 : forecast.temp;
+
             forecastElement.innerHTML = `
             <div class="div-day${i}name">${this.getDayName(forecast.day)}</div>
             <img src="${this.getWeatherIconUrl(forecast.icon)}" alt="">
             <div class="descr-forecast">${forecast.description}</div>
-            <div class="dateforecastoweek">${forecast.temp.toFixed(0)}°C</div>
+            <div class="dateforecastoweek">${temp.toFixed(0)}${isFahrenheit ? '°F' : '°C'}</div>
           `;
             forecastContainer.appendChild(forecastElement);
         }
     },
+
+
 
     getDayName: function (dayIndex) {
         const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -166,7 +204,19 @@ function customizeWeatherIcon(icon) {
 
 function getWeatherForecast(city) {
     const apiKey = 'fe49a1e566e9529212f0a475e5274553'; // replace with your OpenWeatherMap API key
+    const unitToggle = document.querySelector(".unit-toggle");
     const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?appid=${apiKey}&q=${city}`;
+    // add event listener to unit toggle button
+    unitToggle.addEventListener("click", () => {
+        if (this.unit === "metric") {
+            this.unit = "imperial";
+        } else {
+            this.unit = "metric";
+        }
+        this.fetchCurrentWeather(data.name); // re-fetch weather data with new unit
+        this.fetchForecast(data.name); // re-fetch forecast data
+    })
+
     // replace YOUR_LOCATION_HERE with the location you want to get weather for
 
     fetch(apiUrl)
